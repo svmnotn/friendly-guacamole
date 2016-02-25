@@ -6,9 +6,13 @@ public class Game {
   Dictionary<Vector, Grid> map;
 
   public Game(List<Player> players) {
-	  this.players = players;
-	  curr = players.ToArray () [0];
-	  map = new Dictionary<Vector, Grid> ();
-	  map.Add (new Vector (0, 0), new Grid ());
+    this.players = players;
+    curr = players.ToArray () [0];
+    map = new Dictionary<Vector, Grid> ();
+    map.Add (new Vector (0, 0), new Grid ());
+  }
+  
+  public Winner Check(Vector click) {
+    return new Winner();
   }
 }
