@@ -1,4 +1,4 @@
-﻿public struct Player {
+﻿public class Player {
   public int score;
   public string type;
 
