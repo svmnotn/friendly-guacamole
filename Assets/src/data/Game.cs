@@ -13,6 +13,23 @@ public class Game {
   }
   
   public Winner Check(Vector click) {
+    var gridV = ClickToGrid(click);
+    var grid = FromGridVector(gridV);
+    
+    // TODO: Check if there is a winner 
+    
     return new Winner();
+  }
+  
+  Vector ClickToGrid(Vector click) {
+    var x = click.x % 3;
+    var y = click.y % 3;
+    return new Vector(x,y);
+  }
+  
+  Grid FromGridVector(Vector click) {
+    Grid grid = null;
+    map.TryGetValue(click, grid);
+    return grid;
   }
 }
