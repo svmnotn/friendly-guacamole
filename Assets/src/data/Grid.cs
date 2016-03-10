@@ -25,7 +25,7 @@ Cell[,] grid;
     return grid [pos.x, pos.y];
   }
 
-	public string TypeAt(Vector pos){
+  public string TypeAt(Vector pos) {
     var cell = GetCell (pos);
     if (!cell.played) {
       return "";
@@ -33,11 +33,7 @@ Cell[,] grid;
     return cell.player.type;
   }
 
-  public bool Played(Vector pos){
+  public bool Played(Vector pos) {
     return GetCell (pos).played;
-  }
-
-  public Winner Check(Vector pos) {
-    return new Winner();
   }
 }
