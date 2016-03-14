@@ -1,6 +1,7 @@
 ﻿public struct Cell {
 	public static Cell def = new Cell();
-
+	
+	public bool won;
 	public bool played;
 	public string type;
 
