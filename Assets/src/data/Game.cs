@@ -3,13 +3,13 @@
 public class Game {
   List<Player> players;
   Player curr;
-  Dictionary<Vector, Grid> map;
+  public Dictionary<Vector, Grid> map;
 
   public Game(List<Player> players) {
     this.players = players;
     curr = players.ToArray () [0];
     map = new Dictionary<Vector, Grid> ();
-    map.Add (new Vector (0, 0), new Grid ());
+    map.Add (new Vector (), new Grid ());
   }
   
   public Winner Check(Vector click) {
@@ -28,8 +28,8 @@ public class Game {
   }
   
   Grid FromGridVector(Vector click) {
-    Grid grid = null;
-    map.TryGetValue(click, grid);
+    Grid grid;
+    map.TryGetValue(click, out grid);
     return grid;
   }
 }

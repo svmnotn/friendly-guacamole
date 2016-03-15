@@ -1,11 +1,11 @@
 ﻿public class Grid {
-Cell[,] grid;
+  Cell[,] grid;
   
   public Grid() {
-	  this.grid = new Cell[,] {
-			{Cell.def, Cell.def, Cell.def},
-			{Cell.def, Cell.def, Cell.def},
-			{Cell.def, Cell.def, Cell.def}
+	  grid = new Cell[,] {
+      {Cell.def, Cell.def, Cell.def},
+      {Cell.def, Cell.def, Cell.def},
+      {Cell.def, Cell.def, Cell.def}
 		};
 	}
 
@@ -14,7 +14,7 @@ Cell[,] grid;
   }
 
   public bool Play(Vector pos, Player p) {
-    if (grid [pos.x, pos.y].played) {
+    if (Played (pos) || p == null) {
       return false;
     }
     grid [pos.x, pos.y] = new Cell(p);

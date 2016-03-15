@@ -1,12 +1,17 @@
 ﻿public struct Cell {
-	public static Cell def = new Cell();
+	public static Cell def = new Cell(null);
 	
 	public bool won;
 	public bool played;
-	public string type;
+	public Player player;
 
-	public Cell(string type) {
-		this.played = true;
-		this.type = type;
+  public Cell(Player player) {
+    if (player != null) {
+      this.played = true;
+    } else {
+      this.played = false;
+    }
+    this.player= player;
+    this.won = false;
 	}
 }
