@@ -1,35 +1,47 @@
 ﻿using System.Collections.Generic;
-
+using UnityEngine;
 public class Game {
-  List<Player> players;
-  Player curr;
+  Queue<Player> players;
+  public Player curr;
   public Dictionary<Vector, Grid> map;
 
-  public Game(List<Player> players) {
+  public Game(Queue<Player> players) {
     this.players = players;
-    curr = players.ToArray () [0];
+    Next ();
     map = new Dictionary<Vector, Grid> ();
     map.Add (new Vector (), new Grid ());
   }
-  
+
+  public Cell Play(Vector grid, Vector cell) {
+    var g = FromGridVector (grid);
+    var c = g.grid [cell.x, cell.y];
+    if (!c.played) {
+      c = new Cell (curr);
+      Next ();
+      g.grid[cell.x, cell.y] = c;
+    }
+    return c;
+  }
+
+  void Next() {
+    curr = players.Dequeue ();
+    players.Enqueue (curr);
+  }
+
   public Winner Check(Vector click) {
-    var gridV = ClickToGrid(click);
-    var grid = FromGridVector(gridV);
     
     // TODO: Check if there is a winner 
     
     return new Winner();
   }
-  
-  Vector ClickToGrid(Vector click) {
-    var x = click.x % 3;
-    var y = click.y % 3;
-    return new Vector(x,y);
-  }
-  
-  Grid FromGridVector(Vector click) {
+    
+  public Grid FromGridVector(Vector click) {
     Grid grid;
     map.TryGetValue(click, out grid);
     return grid;
+  }
+
+  public Cell Cell(Vector grid, Vector cell) {
+    return FromGridVector(grid).grid[cell.x,cell.y];
   }
 }

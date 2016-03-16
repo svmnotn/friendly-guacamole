@@ -5,13 +5,13 @@
 	public bool played;
 	public Player player;
 
-  public Cell(Player player) {
+  public Cell(Player player, bool won = false) {
     if (player != null) {
       this.played = true;
     } else {
       this.played = false;
     }
     this.player= player;
-    this.won = false;
+    this.won = won;
 	}
 }

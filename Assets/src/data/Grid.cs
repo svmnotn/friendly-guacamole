@@ -1,5 +1,5 @@
 ﻿public class Grid {
-  Cell[,] grid;
+  public Cell[,] grid;
   
   public Grid() {
 	  grid = new Cell[,] {
@@ -26,11 +26,10 @@
   }
 
   public string TypeAt(Vector pos) {
-    var cell = GetCell (pos);
-    if (!cell.played) {
+    if (!Played(pos)) {
       return "";
     }
-    return cell.player.type;
+    return GetCell (pos).player.type;
   }
 
   public bool Played(Vector pos) {

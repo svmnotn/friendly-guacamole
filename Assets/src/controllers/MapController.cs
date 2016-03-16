@@ -6,45 +6,66 @@ using System.Collections.Generic;
 public class MapController : MonoBehaviour {
   Game game;
   public GameObject grid;
+  public Color won;
+  public Text player;
 
   void Start () {
-    var players = new List<Player>();
+    var players = new Queue<Player>();
     // TODO CONFIGS
-    players.Add (new Player("X"));
-    players.Add (new Player("O"));
+    players.Enqueue (new Player("X"));
+    players.Enqueue (new Player("O"));
     game = new Game (players);
     var pos = new Vector ();
     Grid tmp;
     game.map.TryGetValue (pos, out tmp);
     CreateGrid (pos, tmp);
+    player.text = "Current Player: '" + game.curr.type + "' Score: " + game.curr.score;
   }
 
   public void Click(Button b) {
-    // TODO Game.
-  }
+    var posGrid = GridFromButton (b);
+    var posCell = FromOrdinal (b);
+    var cell = game.Play (posGrid, posCell);
+    b.GetComponentInChildren<Text> ().text = cell.player.type;
+    b.interactable = false;
 
-  public void CreateGrid (Vector pos, Grid g) {
+    if (cell.won) {
+      var colors = b.colors;
+      colors.disabledColor = won;
+      b.colors = colors;
+    }
+    player.text = "Current Player: '" + game.curr.type + "' Score: " + game.curr.score;
+  }
+    
+  void CreateGrid (Vector pos, Grid g) {
     var newGrid = (GameObject) Instantiate (grid, GridToWorld(pos), Quaternion.identity);
     var bttns = newGrid.GetComponentsInChildren<Button>();
     int i = 0;
     foreach (var b in bttns) {
-      b.onClick.AddListener(() => Click(b));
-      b.GetComponentInChildren<Text> ().text = "" + i;
+      var btn = b;
+      b.onClick.AddListener(() => Click(btn));
       b.transform.name = "" + i++;
-      b.GetComponentInChildren<Text> ().text = g.TypeAt (FromOrdinal (b.transform.name));
     }
   }
 
-  public Vector3 GridToWorld (Vector p) {
+  Transform GetGridTransform(Button b) {
+    return b.transform.parent.parent.parent;
+  }
+
+  Vector3 GridToWorld (Vector p) {
     return new Vector3 (p.x * 3, p.y * 3, 0);
   }
 
-  public Vector GridFromWorld (Vector3 p) {
+  Vector GridFromWorld (Vector3 p) {
     return new Vector ((int)p.x / 3, (int)p.y / 3);
   }
 
-  public Vector FromOrdinal(string s){
-    var i = int.Parse (s);
+  Vector GridFromButton (Button b) {
+    return GridFromWorld(GetGridTransform(b).position);
+  }
+
+  Vector FromOrdinal(Button b){
+    var i = int.Parse (b.transform.name);
     switch (i) {
     case 0: 
       return new Vector ();
