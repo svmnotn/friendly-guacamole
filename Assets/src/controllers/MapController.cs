@@ -4,41 +4,25 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class MapController : MonoBehaviour {
-  Game game;
+  public GameController c;
   public GameObject grid;
   public Color won;
-  public Text player;
 
   void Start () {
-    var players = new Queue<Player>();
-    // TODO CONFIGS
-    players.Enqueue (new Player("X"));
-    players.Enqueue (new Player("O"));
-    game = new Game (players);
-    var pos = new Vector ();
-    Grid tmp;
-    game.map.TryGetValue (pos, out tmp);
-    CreateGrid (pos, tmp);
-    player.text = "Current Player: '" + game.curr.type + "' Score: " + game.curr.score;
+    c.game.GridAdded += CreateGrid;
+    c.game.AddGrid (new Vector());
   }
 
   public void Click(Button b) {
     var posGrid = GridFromButton (b);
     var posCell = FromOrdinal (b);
-    var cell = game.Play (posGrid, posCell);
-    b.GetComponentInChildren<Text> ().text = cell.player.type;
+    b.GetComponentInChildren<Text> ().text = c.Current.type;
     b.interactable = false;
-
-    if (cell.won) {
-      var colors = b.colors;
-      colors.disabledColor = won;
-      b.colors = colors;
-    }
-    player.text = "Current Player: '" + game.curr.type + "' Score: " + game.curr.score;
+    c.game.Play (posGrid, posCell);
   }
-    
-  void CreateGrid (Vector pos, Grid g) {
-    var newGrid = (GameObject) Instantiate (grid, GridToWorld(pos), Quaternion.identity);
+
+  void CreateGrid (Vector pos) {
+    var newGrid = (GameObject) Instantiate (grid, pos.World, Quaternion.identity);
     var bttns = newGrid.GetComponentsInChildren<Button>();
     int i = 0;
     foreach (var b in bttns) {
@@ -51,24 +35,16 @@ public class MapController : MonoBehaviour {
   Transform GetGridTransform(Button b) {
     return b.transform.parent.parent.parent;
   }
-
-  Vector3 GridToWorld (Vector p) {
-    return new Vector3 (p.x * 3, p.y * 3, 0);
-  }
-
-  Vector GridFromWorld (Vector3 p) {
-    return new Vector ((int)p.x / 3, (int)p.y / 3);
-  }
-
+    
   Vector GridFromButton (Button b) {
-    return GridFromWorld(GetGridTransform(b).position);
+    return Vector.FromWorld(GetGridTransform(b).position);
   }
 
   Vector FromOrdinal(Button b){
     var i = int.Parse (b.transform.name);
     switch (i) {
     case 0: 
-      return new Vector ();
+      return new Vector (0,0);
     case 1:
       return new Vector (0,1);
     case 2:

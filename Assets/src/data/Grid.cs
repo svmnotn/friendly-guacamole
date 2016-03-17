@@ -1,6 +1,6 @@
 ﻿public class Grid {
   public Cell[,] grid;
-  
+    
   public Grid() {
 	  grid = new Cell[,] {
       {Cell.def, Cell.def, Cell.def},

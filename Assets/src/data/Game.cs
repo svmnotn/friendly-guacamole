@@ -1,47 +1,56 @@
 ﻿using System.Collections.Generic;
+using System;
+// TODO REMOVE
 using UnityEngine;
+
 public class Game {
   Queue<Player> players;
   public Player curr;
-  public Dictionary<Vector, Grid> map;
+  public Action PlayerSwitch;
+  public Action<Vector> GridAdded;
+  Dictionary<Vector, Grid> map;
 
   public Game(Queue<Player> players) {
     this.players = players;
     Next ();
     map = new Dictionary<Vector, Grid> ();
-    map.Add (new Vector (), new Grid ());
   }
 
-  public Cell Play(Vector grid, Vector cell) {
-    var g = FromGridVector (grid);
+  public void AddGrid(Vector pos) {
+    map.Add (pos, new Grid ());
+    if (GridAdded != null)
+      GridAdded (pos);
+  }
+
+  public void Play(Vector grid, Vector cell) {
+    var g = GetGrid (grid);
     var c = g.grid [cell.x, cell.y];
     if (!c.played) {
       c = new Cell (curr);
       Next ();
       g.grid[cell.x, cell.y] = c;
     }
-    return c;
+
+    Check (grid, cell);
   }
 
   void Next() {
     curr = players.Dequeue ();
     players.Enqueue (curr);
+    if (PlayerSwitch != null)
+      PlayerSwitch ();
   }
 
-  public Winner Check(Vector click) {
+  bool Check(Vector grid, Vector cell) {
     
     // TODO: Check if there is a winner 
     
-    return new Winner();
+    return false;
   }
     
-  public Grid FromGridVector(Vector click) {
+  Grid GetGrid(Vector click) {
     Grid grid;
     map.TryGetValue(click, out grid);
     return grid;
-  }
-
-  public Cell Cell(Vector grid, Vector cell) {
-    return FromGridVector(grid).grid[cell.x,cell.y];
   }
 }
