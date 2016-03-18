@@ -68,6 +68,22 @@ public class Game {
       }
     }
 
+		var c1 = g.grid[1,1].player != null ? g.grid[1,1].player.type : null;
+		if (c1 != null){
+			// TL
+			var c2 = g.grid[0,0].player != null ? g.grid[0,0].player.type : null;
+			var c3 = g.grid[2,2].player != null ? g.grid[2,2].player.type : null;
+			if (c2 != null && c3 != null && c1 == c2 && c2 == c3){
+				return true;
+			}
+			// TR
+			c2 = g.grid[2,0].player != null ? g.grid[2,0].player.type : null;
+			c3 = g.grid[0,2].player != null ? g.grid[0,2].player.type : null;
+			if (c2 != null && c3 != null && c1 == c2 && c2 == c3){
+				return true;
+			}
+		}
+
     Next ();
     return false;
   }
