@@ -8,6 +8,7 @@ public class Game {
   public Player curr;
   public Action PlayerSwitch;
   public Action<Vector> GridAdded;
+  public Action<Vector, Vector> CellWon;
   Dictionary<Vector, Grid> map;
 
   public Game(Queue<Player> players) {
@@ -22,16 +23,19 @@ public class Game {
       GridAdded (pos);
   }
 
-  public void Play(Vector grid, Vector cell) {
+  public void RemoveGrid(Vector pos) {
+    //TODO FIX LAZY
+    map.Clear ();
+  }
+
+  public bool Play(Vector grid, Vector cell) {
     var g = GetGrid (grid);
     var c = g.grid [cell.x, cell.y];
-    if (!c.played) {
-      c = new Cell (curr);
-      Next ();
-      g.grid[cell.x, cell.y] = c;
-    }
 
-    Check (grid, cell);
+    c = new Cell (curr);
+    g.grid[cell.x, cell.y] = c;
+
+    return Check (grid, cell);
   }
 
   void Next() {
@@ -42,9 +46,29 @@ public class Game {
   }
 
   bool Check(Vector grid, Vector cell) {
+    var g = GetGrid (grid);
+
+    for (int i = 0; i < g.grid.GetLength (0); i++) {
+      var c1 = g.grid [i, 0].player != null ? g.grid [i, 0].player.type : null;
+      var c2 = g.grid [i, 1].player != null ? g.grid [i, 1].player.type : null;
+      var c3 = g.grid [i, 2].player != null ? g.grid [i, 2].player.type : null;
+
+      if (c1 != null && c1 == c2 && c2 == c3) {
+        return true;
+      }
+    }
     
-    // TODO: Check if there is a winner 
-    
+    for (int i = 0; i < g.grid.GetLength (1); i++) {
+      var c1 = g.grid [0, i].player != null ? g.grid [0, i].player.type : null;
+      var c2 = g.grid [1, i].player != null ? g.grid [1, i].player.type : null;
+      var c3 = g.grid [2, i].player != null ? g.grid [2, i].player.type : null;
+
+      if (c1 != null && c1 == c2 && c2 == c3) {
+        return true;
+      }
+    }
+
+    Next ();
     return false;
   }
     
